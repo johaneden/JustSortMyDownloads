@@ -3,7 +3,6 @@ import pathlib
 def name_check(target_path: pathlib.Path):
     if not target_path.exists():
         return target_path
-    print(target_path.parent)
     counter = 1
     old_file_name =  pathlib.Path(f'{target_path.stem}{target_path.suffix}')
     while target_path.exists():
@@ -57,11 +56,12 @@ for file in files:
         if file.suffix in value:
             original_name = name_check(files_dir / key / file.name)
             file.move(files_dir / key / original_name.name)
-            print(f'{file.name} moved in {key}')
+            print(f'{original_name} moved in {key}')
             break
     else:
-        print(f'{file.name} moved in etc dir.')
-        file.move(files_dir / 'etc' / file.name)
+        original_name = name_check(files_dir / 'etc' / file.name)
+        file.move(files_dir / 'etc' / original_name.name)
+        print(f'{original_name} moved in etc dir.')
 else:
     print('Sorting completed.')
 
