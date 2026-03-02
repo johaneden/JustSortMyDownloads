@@ -1,25 +1,25 @@
 import pathlib
 dirs = {
-    # Изображения
+    # pic
     'photo': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp', '.ico', '.tiff', '.psd'],
 
-    # Документы и тексты
+    # docs
     'documents': ['.txt', '.md', '.pdf', '.doc', '.docx', '.odt', '.rtf', '.xls', '.xlsx', '.ppt', '.pptx', '.csv'],
 
 
-    # Музыка и аудио
+    # audio
     'music': ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.wma'],
 
-    # Видео
+    # video
     'videos': ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm', '.m4v'],
 
-    # Торренты
+    # torrent
     'torrent': ['.torrent'],
 
-    # # Исполняемые файлы и программы
+    # # exe
     # 'executables': ['.exe', '.msi', '.bat', '.sh', '.app', '.deb', '.rpm', '.dmg'],
 
-    # # Код и скрипты
+    # # code
     # 'code': ['.py', '.js', '.html', '.css', '.cpp', '.c', '.h', '.java', '.php', '.rb', '.go', '.swift', '.json', '.xml', '.yaml', '.toml']
 
 
@@ -37,7 +37,7 @@ tmp.mkdir(exist_ok=True)
 
 
 files = [el for el in directory.iterdir() if el.is_file()]
-print(f'Неотсортированных файлов: {len(files)}')
+print(f'Unsorted files: {len(files)}')
 for file in files:
     for key, value in dirs.items():
         if file.suffix in value:
@@ -48,9 +48,9 @@ for file in files:
         print(f'{file.name} moved in etc dir.')
         file.move(files_dir / 'etc' / file.name)
 else:
-    print('Сортировка успешно окончена!')
+    print('Sorting completed.')
 
-input("Нажмите Enter, чтобы выйти...")
+input("Press Enter to exit...")
 
 
 
