@@ -1,4 +1,5 @@
 import pathlib
+import json
 
 def name_check(target_path: pathlib.Path):
     if not target_path.exists():
@@ -10,6 +11,12 @@ def name_check(target_path: pathlib.Path):
         target_path = target_path.parent / file_name
         counter += 1
     return target_path
+
+
+placeholders = {
+    'home': str(pathlib.Path.home()),
+    'script_dir': pathlib.Path(__file__).parent
+}
 
 
 dirs = {
@@ -37,10 +44,31 @@ dirs = {
 
 
 }
+try:
+    with open(placeholders['script_dir'] / 'paths_config.json', 'r') as data:
+        config_file = json.load(data)
+except:
+    print('Config file doesn\'t exist')
+
+
+unsorted_folders = list()
+
+for folder in config_file['unsorted_folders']:
+    folder: str
+    folder = folder.replace('{home}',placeholders['home'])
+    unsorted_folders.append(pathlib.Path(folder))
+print(unsorted_folders)
 
 
 directory = pathlib.Path.home() / "Downloads"
-files_dir = directory / 'sorted files'
+
+if config_file['path'].strip() == '':
+    files_dir = directory / 'sorted files'
+else:
+    files_dir = pathlib.Path(config_file['path']) / 'sorted files'
+    print(files_dir)
+
+
 files_dir.mkdir(exist_ok=True)
 for path in dirs.keys():
     tmp = files_dir / path
@@ -49,39 +77,22 @@ tmp = files_dir / 'etc'
 tmp.mkdir(exist_ok=True)
 
 
-files = [el for el in directory.iterdir() if el.is_file()]
-print(f'Unsorted files: {len(files)}')
-for file in files:
-    for key, value in dirs.items():
-        if file.suffix in value:
-            original_name = name_check(files_dir / key / file.name)
-            file.move(files_dir / key / original_name.name)
-            print(f'{original_name} moved in {key}')
-            break
-    else:
-        original_name = name_check(files_dir / 'etc' / file.name)
-        file.move(files_dir / 'etc' / original_name.name)
-        print(f'{original_name} moved in etc dir.')
-else:
-    print('Sorting completed.')
+for folder in unsorted_folders:
+    files = [el for el in folder.iterdir() if el.is_file()]
+    print(f'Unsorted files: {len(files)}')
+    for file in files:
+        for key, value in dirs.items():
+            if file.suffix in value:
+                original_name = name_check(files_dir / key / file.name)
+                print(f'{original_name.name} moved in {key}')
+                file.move(files_dir / key / original_name.name)
+                break
+        else:
+            original_name = name_check(files_dir / 'etc' / file.name)
+            file.move(files_dir / 'etc' / original_name.name)
+            print(f'{original_name.name} moved in etc dir.')
+
+    print(f'{folder.name} sorted.'.upper())
 
 input("Press Enter to exit...")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
