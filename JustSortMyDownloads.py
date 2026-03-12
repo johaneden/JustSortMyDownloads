@@ -13,6 +13,8 @@ def name_check(target_path: pathlib.Path):
     return target_path
 
 
+config_file = dict()
+
 placeholders = {
     'home': str(pathlib.Path.home()),
     'script_dir': pathlib.Path(__file__).parent
@@ -44,6 +46,7 @@ dirs = {
 
 
 }
+
 try:
     with open(placeholders['script_dir'] / 'paths_config.json', 'r') as data:
         config_file = json.load(data)
@@ -53,28 +56,23 @@ except:
 
 unsorted_folders = list()
 
-for folder in config_file['unsorted_folders']:
-    folder: str
+for folder in config_file.get('unsorted_folders', [placeholders['home']+'/Downloads']):
     folder = folder.replace('{home}',placeholders['home'])
     unsorted_folders.append(pathlib.Path(folder))
 print(unsorted_folders)
 
 
-directory = pathlib.Path.home() / "Downloads"
 
-if config_file['path'].strip() == '':
-    files_dir = directory / 'sorted files'
-else:
-    files_dir = pathlib.Path(config_file['path']) / 'sorted files'
-    print(files_dir)
 
+
+files_dir = config_file.get(pathlib.Path('path'), pathlib.Path(placeholders['home']) / 'Downloads' / 'sorted files')
 
 files_dir.mkdir(exist_ok=True)
-for path in dirs.keys():
+
+for path in list(dirs.keys()) + ['etc']:
     tmp = files_dir / path
     tmp.mkdir(exist_ok=True)
-tmp = files_dir / 'etc'
-tmp.mkdir(exist_ok=True)
+
 
 
 for folder in unsorted_folders:
@@ -90,7 +88,7 @@ for folder in unsorted_folders:
         else:
             original_name = name_check(files_dir / 'etc' / file.name)
             file.move(files_dir / 'etc' / original_name.name)
-            print(f'{original_name.name} moved in etc dir.')
+            print(f'{original_name.name} moved in etc.')
 
     print(f'{folder.name} sorted.'.upper())
 
