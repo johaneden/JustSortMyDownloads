@@ -21,31 +21,6 @@ placeholders = {
 }
 
 
-dirs = {
-    # pic
-    'photo': ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp', '.ico', '.tiff', '.psd'],
-
-    # docs
-    'documents': ['.txt', '.md', '.pdf', '.doc', '.docx', '.odt', '.rtf', '.xls', '.xlsx', '.ppt', '.pptx', '.csv'],
-
-
-    # audio
-    'music': ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.m4a', '.wma'],
-
-    # video
-    'videos': ['.mp4', '.avi', '.mkv', '.mov', '.wmv', '.flv', '.webm', '.m4v'],
-
-    # torrent
-    'torrent': ['.torrent'],
-
-    # # exe
-    # 'executables': ['.exe', '.msi', '.bat', '.sh', '.app', '.deb', '.rpm', '.dmg'],
-
-    # # code
-    # 'code': ['.py', '.js', '.html', '.css', '.cpp', '.c', '.h', '.java', '.php', '.rb', '.go', '.swift', '.json', '.xml', '.yaml', '.toml']
-
-
-}
 
 try:
     with open(placeholders['script_dir'] / 'paths_config.json', 'r') as data:
@@ -53,6 +28,7 @@ try:
 except:
     print('Config file doesn\'t exist')
 
+dirs = config_file['dir']
 
 unsorted_folders = list()
 
