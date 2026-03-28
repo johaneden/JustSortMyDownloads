@@ -13,7 +13,33 @@ def name_check(target_path: pathlib.Path):
     return target_path
 
 
-config_file = dict()
+config_file = {
+    "unsorted_folders": ["{home}/Downloads"],
+    "path" : "",
+    "dir" : {
+    
+    "photo": [".jpg", ".jpeg", ".png", ".gif", ".bmp", ".svg", ".webp", ".ico", ".tiff", ".psd"],
+
+    
+    "documents": [".txt", ".md", ".pdf", ".doc", ".docx", ".odt", ".rtf", ".xls", ".xlsx", ".ppt", ".pptx", ".csv"],
+
+
+    
+    "music": [".mp3", ".wav", ".flac", ".aac", ".ogg", ".m4a", ".wma"],
+
+  
+    "videos": [".mp4", ".avi", ".mkv", ".mov", ".wmv", ".flv", ".webm", ".m4v"],
+
+   
+    "torrent": [".torrent"]
+
+   
+    
+
+
+}
+
+}
 
 placeholders = {
     'home': str(pathlib.Path.home()),
@@ -27,15 +53,19 @@ try:
         config_file = json.load(data)
 except:
     print('Config file doesn\'t exist')
+    with open(placeholders["script_dir"] / "paths_config.json", 'w', encoding="UTF-8") as config_path:
+        json.dump(config_file,fp=config_path,indent= 2)
+        print('config file created')
 
 dirs = config_file['dir']
 
 unsorted_folders = list()
 
 for folder in config_file.get('unsorted_folders', [placeholders['home']+'/Downloads']):
-    folder = folder.replace('{home}',placeholders['home'])
+    if '{home}' in folder:
+        folder = folder.replace('{home}',placeholders['home'])
     unsorted_folders.append(pathlib.Path(folder))
-print(unsorted_folders)
+print(*unsorted_folders)
 
 
 
